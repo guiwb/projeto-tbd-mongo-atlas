@@ -1,4 +1,4 @@
-# Sistema de biblioteca inteligente no MongoDB Atlas
+# Sistema de biblioteca no MongoDB Atlas
 
 Solução para a rede de bibliotecas universitárias: gerenciamento de livros, empréstimos,
 reservas, avaliações, recomendação, estatísticas e auditoria. Todo o armazenamento em
@@ -7,9 +7,9 @@ MongoDB Atlas.
 ## Stack
 
 - MongoDB Atlas (cluster M0)
-- mongosh — execução dos scripts de banco
-- Node.js + Express — backend (Parte 16)
-- HTML + JS puro — frontend (Parte 16)
+- mongosh (execução dos scripts de banco)
+- Node.js + Express (backend, Parte 16)
+- HTML + JS puro (frontend, Parte 16)
 
 ## Configuração
 
@@ -21,6 +21,7 @@ DB_NAME=biblioteca
 ```
 
 Pré-requisitos no Atlas:
+
 - IP da máquina liberado em Network Access.
 - Usuário de banco com permissão de leitura/escrita em Database Access.
 
@@ -90,18 +91,18 @@ npm start            # http://localhost:3000
 
 Endpoints:
 
-| Entidade | Operação | Rota |
-|---|---|---|
-| Livros | inserir | `POST /livros` |
-| Livros | atualizar quantidade | `PATCH /livros/:id/quantidade` |
-| Livros | alterar categoria | `PATCH /livros/:id/categoria` |
-| Livros | remover | `DELETE /livros/:id` |
-| Usuários | bloquear | `PATCH /usuarios/:id/bloquear` |
-| Usuários | reativar | `PATCH /usuarios/:id/reativar` |
-| Usuários | alterar curso | `PATCH /usuarios/:id/curso` |
-| Empréstimos | realizar | `POST /emprestimos` |
-| Empréstimos | registrar devolução | `PATCH /emprestimos/:id/devolucao` |
-| Empréstimos | renovar | `PATCH /emprestimos/:id/renovar` |
+| Entidade    | Operação             | Rota                               |
+| ----------- | -------------------- | ---------------------------------- |
+| Livros      | inserir              | `POST /livros`                     |
+| Livros      | atualizar quantidade | `PATCH /livros/:id/quantidade`     |
+| Livros      | alterar categoria    | `PATCH /livros/:id/categoria`      |
+| Livros      | remover              | `DELETE /livros/:id`               |
+| Usuários    | bloquear             | `PATCH /usuarios/:id/bloquear`     |
+| Usuários    | reativar             | `PATCH /usuarios/:id/reativar`     |
+| Usuários    | alterar curso        | `PATCH /usuarios/:id/curso`        |
+| Empréstimos | realizar             | `POST /emprestimos`                |
+| Empréstimos | registrar devolução  | `PATCH /emprestimos/:id/devolucao` |
+| Empréstimos | renovar              | `PATCH /emprestimos/:id/renovar`   |
 
 Erros retornam status HTTP adequado (400 validação, 404 inexistente, 409 conflito de
 estado) com corpo `{ "erro": "<mensagem>" }`.
@@ -136,8 +137,8 @@ mongosh "$MONGODB_URI" --quiet db/04-aggregations.js
 
 - Q13: empréstimos com nome do usuário, título do livro e data (dois `$lookup`).
 - Q14: avaliações com usuário, livro, nota e comentário (dois `$lookup`).
-- Q15: relatório completo de um usuário — dados pessoais, empréstimos, reservas e
-  avaliações reunidos via `$lookup` múltiplo a partir de `usuarios`.
+- Q15: relatório completo de um usuário, reunindo dados pessoais, empréstimos, reservas e
+  avaliações via `$lookup` múltiplo a partir de `usuarios`.
 
 ```bash
 mongosh "$MONGODB_URI" --quiet db/05-lookup.js
@@ -168,7 +169,7 @@ O endpoint `POST /emprestimos` realiza o empréstimo dentro de uma transação
 2. decrementar a quantidade do livro (`$inc: -1`);
 3. registrar o log da operação.
 
-Se qualquer passo falhar — por exemplo, livro sem exemplares disponíveis — toda a
+Se qualquer passo falhar (por exemplo, livro sem exemplares disponíveis), toda a
 transação é revertida e nada é persistido. Validado: ao emprestar um livro com
 `quantidade: 1`, a segunda tentativa retorna `409` e a quantidade permanece `0`, sem
 empréstimo nem log órfãos. Requer replica set (atendido pelo Atlas).
@@ -196,9 +197,9 @@ autocomplete (Q18) ordena por relevância do prefixo do título.
 Backend Express com CRUD de livros, usuários, empréstimos, reservas e avaliações, além de
 endpoints de relatório consumidos pelo frontend:
 
-- `GET /relatorios/dashboard` — totais por coleção, livros por categoria, empréstimos por mês.
-- `GET /relatorios/livros-populares?limit=N` — ranking dos livros mais emprestados.
-- `GET /relatorios/usuario/:id` — relatório completo do usuário (empréstimos, reservas, avaliações).
+- `GET /relatorios/dashboard`: totais por coleção, livros por categoria, empréstimos por mês.
+- `GET /relatorios/livros-populares?limit=N`: ranking dos livros mais emprestados.
+- `GET /relatorios/usuario/:id`: relatório completo do usuário (empréstimos, reservas, avaliações).
 
 Frontend em HTML + JS puro (sem build), com quatro telas: dashboard administrativo (dados
 em texto), busca de livros, histórico do usuário e ranking de livros mais populares. O
