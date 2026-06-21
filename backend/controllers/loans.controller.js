@@ -1,4 +1,5 @@
 import { loans } from "../models/loans.model.js";
+import { logs } from "../models/logs.model.js";
 import { toObjectId, notFound } from "../utils.js";
 import { createLoanTransactional } from "../services/loans.service.js";
 
@@ -27,6 +28,13 @@ export async function registerReturn(req, res) {
     if (!result.matchedCount) {
         return res.status(409).json({ erro: "Empréstimo não encontrado ou já devolvido." });
     }
+
+    await logs().insertOne({
+        colecao: "emprestimos",
+        operacao: "devolucao",
+        data: new Date(),
+        dados: { emprestimo_id: toObjectId(req.params.id) }
+    });
 
     res.json({ ok: true });
 }
