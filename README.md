@@ -172,3 +172,21 @@ Se qualquer passo falhar — por exemplo, livro sem exemplares disponíveis — 
 transação é revertida e nada é persistido. Validado: ao emprestar um livro com
 `quantidade: 1`, a segunda tentativa retorna `409` e a quantidade permanece `0`, sem
 empréstimo nem log órfãos. Requer replica set (atendido pelo Atlas).
+
+### Parte 8: Atlas Search (`db/07-atlas-search.js`)
+
+Depende de um índice Atlas Search chamado `default` na coleção `livros`, criado pela
+interface do Atlas com `titulo` mapeado como `string` + `autocomplete` e
+`autor`/`categoria`/`palavrasChave` como `string`.
+
+- Q16: busca por livros contendo "mongodb" (operador `text` em `palavrasChave`).
+- Q17: busca tolerante a erros por termo semelhante a "algoritmo" (`text` com `fuzzy`).
+- Q18: autocomplete de títulos (operador `autocomplete` em `titulo`).
+
+```bash
+mongosh "$MONGODB_URI" --quiet db/07-atlas-search.js
+```
+
+Cada resultado traz o `searchScore` via `$meta`. Como o seed usa as mesmas palavras-chave
+em todos os livros, Q16 e Q17 retornam o catálogo inteiro com score uniforme; o
+autocomplete (Q18) ordena por relevância do prefixo do título.
