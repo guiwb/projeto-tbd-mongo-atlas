@@ -117,3 +117,17 @@ estado) com corpo `{ "erro": "<mensagem>" }`.
 ```bash
 mongosh "$MONGODB_URI" --quiet db/03-consultas.js
 ```
+
+### Parte 5: Aggregation pipeline (`db/04-aggregations.js`)
+
+- Q6: quantidade de livros por categoria (`$group` + `$sum`).
+- Q7: média de avaliações por livro (`$avg` da nota + `$lookup` no título).
+- Q8: dez livros mais emprestados (`$group` por `livro_id` + `$lookup`).
+- Q9: cursos que mais utilizam a biblioteca (join empréstimo→usuário, `$group` por curso).
+- Q10: taxa de devolução por mês (`$year`/`$month` + razão devolvidos/total com `$cond`).
+- Q11: ranking dos autores mais lidos (join empréstimo→livro, `$group` por autor).
+- Q12: livros com nota média inferior a 3 (`$avg` + `$match`).
+
+```bash
+mongosh "$MONGODB_URI" --quiet db/04-aggregations.js
+```
