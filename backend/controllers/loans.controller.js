@@ -1,7 +1,6 @@
 import { loans } from "../models/loans.model.js";
 import { toObjectId, notFound } from "../utils.js";
-
-const FIFTEEN_DAYS = 15 * 24 * 60 * 60 * 1000;
+import { createLoanTransactional } from "../services/loans.service.js";
 
 export async function list(req, res) {
     const filter = {};
@@ -16,18 +15,8 @@ export async function create(req, res) {
         return res.status(400).json({ erro: "usuario_id e livro_id são obrigatórios." });
     }
 
-    const loanDate = new Date();
-    const doc = {
-        usuario_id: toObjectId(usuario_id),
-        livro_id: toObjectId(livro_id),
-        dataEmprestimo: loanDate,
-        dataPrevistaDevolucao: new Date(loanDate.getTime() + FIFTEEN_DAYS),
-        dataDevolucao: null,
-        status: "emprestado"
-    }
-
-    const { insertedId } = await loans().insertOne(doc);
-    res.status(201).json({ _id: insertedId, ...doc });
+    const loan = await createLoanTransactional(toObjectId(usuario_id), toObjectId(livro_id));
+    res.status(201).json(loan);
 }
 
 export async function registerReturn(req, res) {

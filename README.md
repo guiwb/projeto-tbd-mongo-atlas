@@ -158,3 +158,17 @@ Resultado: sem índice o plano é `COLLSCAN` (examina toda a coleção); com ín
 `IXSCAN`, examinando apenas os documentos que casam (ex.: `titulo` 500 → 1, `categoria`
 500 → 76, `email` 100 → 1). Em volume pequeno o tempo é desprezível, então a métrica
 relevante é a redução de documentos examinados.
+
+### Parte 12: Transação (`backend/services/loans.service.js`)
+
+O endpoint `POST /emprestimos` realiza o empréstimo dentro de uma transação
+(`session.withTransaction`) com três operações atômicas:
+
+1. inserir o empréstimo;
+2. decrementar a quantidade do livro (`$inc: -1`);
+3. registrar o log da operação.
+
+Se qualquer passo falhar — por exemplo, livro sem exemplares disponíveis — toda a
+transação é revertida e nada é persistido. Validado: ao emprestar um livro com
+`quantidade: 1`, a segunda tentativa retorna `409` e a quantidade permanece `0`, sem
+empréstimo nem log órfãos. Requer replica set (atendido pelo Atlas).
