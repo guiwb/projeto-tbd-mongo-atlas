@@ -131,3 +131,14 @@ mongosh "$MONGODB_URI" --quiet db/03-consultas.js
 ```bash
 mongosh "$MONGODB_URI" --quiet db/04-aggregations.js
 ```
+
+### Parte 6: Uso de `$lookup` (`db/05-lookup.js`)
+
+- Q13: empréstimos com nome do usuário, título do livro e data (dois `$lookup`).
+- Q14: avaliações com usuário, livro, nota e comentário (dois `$lookup`).
+- Q15: relatório completo de um usuário — dados pessoais, empréstimos, reservas e
+  avaliações reunidos via `$lookup` múltiplo a partir de `usuarios`.
+
+```bash
+mongosh "$MONGODB_URI" --quiet db/05-lookup.js
+```
