@@ -142,3 +142,19 @@ mongosh "$MONGODB_URI" --quiet db/04-aggregations.js
 ```bash
 mongosh "$MONGODB_URI" --quiet db/05-lookup.js
 ```
+
+### Parte 7: Índices (`db/06-indices.js`)
+
+Cria índices em `livros` (`titulo`, `autor`, `isbn` único, `categoria`) e `usuarios`
+(`email` único, `curso`). Para cada um, o script mede a mesma consulta com
+`explain("executionStats")` antes e depois da criação, comparando estágio do plano e
+documentos examinados.
+
+```bash
+mongosh "$MONGODB_URI" --quiet db/06-indices.js
+```
+
+Resultado: sem índice o plano é `COLLSCAN` (examina toda a coleção); com índice passa a
+`IXSCAN`, examinando apenas os documentos que casam (ex.: `titulo` 500 → 1, `categoria`
+500 → 76, `email` 100 → 1). Em volume pequeno o tempo é desprezível, então a métrica
+relevante é a redução de documentos examinados.
