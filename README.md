@@ -1,13 +1,5 @@
 # Sistema de biblioteca no MongoDB Atlas
 
-Solução para a rede de bibliotecas universitárias: gerenciamento de livros, empréstimos,
-reservas, avaliações, recomendação, estatísticas e auditoria. Todo o armazenamento em
-MongoDB Atlas.
-
-As respostas das questões do enunciado (consultas, aggregations, índices, Atlas Search,
-segurança etc.) estão no documento separado de respostas. Este README cobre apenas a
-descrição do projeto e as instruções de execução local.
-
 ## Stack
 
 - MongoDB Atlas (cluster M0)
