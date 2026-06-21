@@ -190,3 +190,27 @@ mongosh "$MONGODB_URI" --quiet db/07-atlas-search.js
 Cada resultado traz o `searchScore` via `$meta`. Como o seed usa as mesmas palavras-chave
 em todos os livros, Q16 e Q17 retornam o catálogo inteiro com score uniforme; o
 autocomplete (Q18) ordena por relevância do prefixo do título.
+
+### Parte 16: Aplicação web (`backend/` + `frontend/`)
+
+Backend Express com CRUD de livros, usuários, empréstimos, reservas e avaliações, além de
+endpoints de relatório consumidos pelo frontend:
+
+- `GET /relatorios/dashboard` — totais por coleção, livros por categoria, empréstimos por mês.
+- `GET /relatorios/livros-populares?limit=N` — ranking dos livros mais emprestados.
+- `GET /relatorios/usuario/:id` — relatório completo do usuário (empréstimos, reservas, avaliações).
+
+Frontend em HTML + JS puro (sem build), com quatro telas: dashboard administrativo (dados
+em texto), busca de livros, histórico do usuário e ranking de livros mais populares. O
+acesso à API é centralizado em `frontend/services/api.js`, com erros exibidos na própria
+tela.
+
+Para rodar localmente (duas etapas):
+
+```bash
+# 1. API
+cd backend && npm install && npm start          # http://localhost:3000
+
+# 2. Frontend (qualquer servidor estático)
+cd frontend && python3 -m http.server 5500       # http://localhost:5500
+```

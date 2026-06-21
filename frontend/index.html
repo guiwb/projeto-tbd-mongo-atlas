@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Inteligente</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; color: #222; }
+        header { background: #1f2937; color: #fff; padding: 16px 24px; }
+        header h1 { margin: 0; font-size: 20px; }
+        nav { display: flex; gap: 8px; padding: 12px 24px; background: #f3f4f6; }
+        nav button { padding: 8px 14px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; border-radius: 4px; }
+        nav button.active { background: #1f2937; color: #fff; }
+        main { padding: 24px; }
+        section { display: none; }
+        section.active { display: block; }
+        h2 { margin-top: 0; }
+        .toolbar { margin-bottom: 16px; display: flex; gap: 8px; }
+        input, select { padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #e5e7eb; padding: 8px 10px; text-align: left; font-size: 14px; }
+        th { background: #f9fafb; }
+        .erro { color: #b91c1c; }
+        .muted { color: #6b7280; }
+        ul.stats { list-style: none; padding: 0; font-size: 15px; line-height: 1.8; }
+    </style>
+</head>
+<body>
+    <header><h1>Sistema de Biblioteca Inteligente</h1></header>
+    <nav>
+        <button data-tab="dashboard" class="active">Dashboard</button>
+        <button data-tab="busca">Busca de livros</button>
+        <button data-tab="historico">Histórico do usuário</button>
+        <button data-tab="ranking">Ranking de livros</button>
+    </nav>
+    <main>
+        <section id="dashboard" class="active">
+            <h2>Dashboard administrativo</h2>
+            <div id="dashboard-conteudo" class="muted">Carregando...</div>
+        </section>
+
+        <section id="busca">
+            <h2>Busca de livros</h2>
+            <div class="toolbar">
+                <input id="busca-input" type="text" placeholder="Buscar por título...">
+                <button id="busca-btn">Buscar</button>
+            </div>
+            <div id="busca-resultado" class="muted"></div>
+        </section>
+
+        <section id="historico">
+            <h2>Histórico do usuário</h2>
+            <div class="toolbar">
+                <select id="historico-select"></select>
+            </div>
+            <div id="historico-resultado" class="muted"></div>
+        </section>
+
+        <section id="ranking">
+            <h2>Ranking dos livros mais populares</h2>
+            <div id="ranking-resultado" class="muted">Carregando...</div>
+        </section>
+    </main>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
