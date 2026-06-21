@@ -1,4 +1,4 @@
-# Sistema de Biblioteca Inteligente — MongoDB Atlas
+# Sistema de biblioteca inteligente no MongoDB Atlas
 
 Solução para a rede de bibliotecas universitárias: gerenciamento de livros, empréstimos,
 reservas, avaliações, recomendação, estatísticas e auditoria. Todo o armazenamento em
@@ -46,7 +46,7 @@ do banco padrão da connection string.
 
 ## Execução por parte
 
-### Parte 1 — Modelagem (`db/00-modelagem.js`)
+### Parte 1: Modelagem (`db/00-modelagem.js`)
 
 Cria as seis coleções (`usuarios`, `livros`, `emprestimos`, `reservas`, `avaliacoes`,
 `logs`) com validação de schema via `$jsonSchema`. O script dropa e recria as coleções,
@@ -56,7 +56,7 @@ servindo como setup inicial idempotente.
 mongosh "$MONGODB_URI" --quiet db/00-modelagem.js
 ```
 
-### Parte 2 — Carga inicial (`db/01-carga.js`)
+### Parte 2: Carga inicial (`db/01-carga.js`)
 
 Popula as coleções nos volumes exigidos: 100 usuários, 500 livros, 1000 empréstimos,
 300 reservas e 1000 avaliações. Os IDs de usuários e livros são capturados após a
@@ -75,4 +75,45 @@ livros:      500
 emprestimos: 1000
 reservas:    300
 avaliacoes:  1000
+```
+
+### Parte 3: CRUD backend (`backend/`)
+
+O CRUD é exposto como endpoints REST no backend (Express + driver mongodb), reaproveitados
+pelo frontend. Para subir a API:
+
+```bash
+cd backend
+npm install
+npm start            # http://localhost:3000
+```
+
+Endpoints:
+
+| Entidade | Operação | Rota |
+|---|---|---|
+| Livros | inserir | `POST /livros` |
+| Livros | atualizar quantidade | `PATCH /livros/:id/quantidade` |
+| Livros | alterar categoria | `PATCH /livros/:id/categoria` |
+| Livros | remover | `DELETE /livros/:id` |
+| Usuários | bloquear | `PATCH /usuarios/:id/bloquear` |
+| Usuários | reativar | `PATCH /usuarios/:id/reativar` |
+| Usuários | alterar curso | `PATCH /usuarios/:id/curso` |
+| Empréstimos | realizar | `POST /emprestimos` |
+| Empréstimos | registrar devolução | `PATCH /emprestimos/:id/devolucao` |
+| Empréstimos | renovar | `PATCH /emprestimos/:id/renovar` |
+
+Erros retornam status HTTP adequado (400 validação, 404 inexistente, 409 conflito de
+estado) com corpo `{ "erro": "<mensagem>" }`.
+
+### Parte 4: Consultas intermediárias (`db/03-consultas.js`)
+
+- Q1: livros da categoria "Computação" publicados após 2020.
+- Q2: usuários cadastrados nos últimos 30 dias (intervalo entre hoje e 30 dias atrás).
+- Q3: empréstimos em atraso (`status: "emprestado"` com data prevista anterior a hoje).
+- Q4: livros que nunca foram emprestados (`$lookup` em empréstimos filtrando vazios).
+- Q5: dez usuários com maior número de empréstimos (`$group` + `$sort` + `$limit`).
+
+```bash
+mongosh "$MONGODB_URI" --quiet db/03-consultas.js
 ```

@@ -1,7 +1,7 @@
 db = db.getSiblingDB("biblioteca");
 
-const colecoes = ["usuarios", "livros", "emprestimos", "reservas", "avaliacoes", "logs"];
-colecoes.forEach((c) => db.getCollection(c).drop());
+const collections = ["usuarios", "livros", "emprestimos", "reservas", "avaliacoes", "logs"];
+collections.forEach((name) => db.getCollection(name).drop());
 
 db.createCollection("usuarios", {
     validator: {
