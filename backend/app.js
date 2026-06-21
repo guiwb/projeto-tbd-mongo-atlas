@@ -5,6 +5,9 @@ import { connect } from "./db.js";
 import booksRoutes from "./routes/books.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import loansRoutes from "./routes/loans.routes.js";
+import reservationsRoutes from "./routes/reservations.routes.js";
+import reviewsRoutes from "./routes/reviews.routes.js";
+import reportsRoutes from "./routes/reports.routes.js";
 
 const app = express();
 app.use(cors());
@@ -13,6 +16,9 @@ app.use(express.json());
 app.use("/livros", booksRoutes);
 app.use("/usuarios", usersRoutes);
 app.use("/emprestimos", loansRoutes);
+app.use("/reservas", reservationsRoutes);
+app.use("/avaliacoes", reviewsRoutes);
+app.use("/relatorios", reportsRoutes);
 
 app.use((req, res) => res.status(404).json({ erro: "Rota não encontrada." }));
 
