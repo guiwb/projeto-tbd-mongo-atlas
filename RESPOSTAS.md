@@ -801,13 +801,26 @@ homogênea para evitar shards sobrecarregados.
 
 ### Questão 19: Usuários com permissões diferentes
 
-Criados em Atlas → Database Access:
+Três usuários com roles distintas no banco `biblioteca`:
 
-- **Administrador:** role `atlasAdmin` (ou `dbOwner` no banco `biblioteca`).
-- **Bibliotecário:** role `readWrite` no banco `biblioteca`.
-- **Consulta:** role `read` no banco `biblioteca`.
+- **Administrador:** role `dbOwner` (leitura, escrita e administração do banco).
+- **Bibliotecário:** role `readWrite`.
+- **Consulta:** role `read`.
 
-**[INSERIR PRINT: os três usuários e suas roles]**
+O script `db/08-seguranca.js` cria os usuários via `db.createUser()` (equivalente ao que
+o Atlas faz no Database Access). Observação: em cluster Atlas M0 (compartilhado) o
+`createUser` via mongosh é bloqueado, então no M0 a criação é feita pela UI (Atlas →
+Database Access) com as mesmas roles.
+
+```js
+db.createUser({
+    user: "bibliotecario",
+    pwd: "...",
+    roles: [{ role: "readWrite", db: "biblioteca" }]
+});
+```
+
+**[INSERIR PRINT: os três usuários e suas roles (Database Access ou `db.getUsers()`)]**
 
 ### Questão 20: IP Access List
 
